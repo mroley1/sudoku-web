@@ -1,5 +1,8 @@
+"use client";
+
 import Image from 'next/image'
 import styles from './page.module.css'
+import { useState } from 'react';
 
 const NUMPADTOPROW = [
   {name: "1", value: 1},
@@ -17,12 +20,49 @@ const NUMPADBOTTOMROW = [
   {name: "X", value: 0},
 ]
 
+function * gridSchemeGen() {
+  var key = 0;
+  for (var row = 0; row <3; row++) {
+    for (var col = 0; col <3; col++) {
+      yield {row: row, col: col, key: key++};
+    }
+  }
+}
+
 export default function Home() {
+  let gridPositionGen = gridSchemeGen();
+  
+  
+  const [board, setBoard] = useState(Array.from({length: 9}, () => Array.from({length: 9}, () => (<Cell />))));
+  
+  const handelChange = (row, col, event) => {
+    let copy = [...board];
+    copy[row][col] = +event.target.value;
+    setBoard(copy);
+  }
+  
+  
+  const [blocks, setBlock] = useState(Array.from({length: 9}, () => <SmallGrid />));
+  
+  
+  
+  console.log(board)
+  
   return (
     <main>
       <div className={styles.main_flex}>
         <div className={styles.board_container}>
-          <div className={styles.board}></div>
+          <div className={styles.board}>
+            <div className={styles.large_grid}>
+              {(() => {
+                let boxes = []
+                for (var i = 0; i < 9; i++) {
+                  boxes.push(<SmallGrid key={i} />);
+                }
+                return boxes;
+              })()}
+            </div>
+          </div>
         </div>
         <div className={styles.input_container}>
           <div className={styles.num_pad}>
@@ -41,4 +81,24 @@ export function NumPadButton({num: num}) {
       <span>{num.name}</span>
     </div>
     )
+}
+
+export function SmallGrid() {
+  return (
+    <div className={styles.box}>
+      
+    </div>
+  )
+}
+
+export function Cell() {
+  const [value, setValue] = useState(null);
+  
+  function handleClick() {
+    setValue('stuff');
+  }
+  
+  return (
+    <div className={styles.cell} onClick={handleClick}>{value}</div>
+  )
 }
