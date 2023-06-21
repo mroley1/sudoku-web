@@ -77,48 +77,26 @@ export function LargeGrid() {
   const [grid, setCell] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => null)))
   
   const handleInteraction = (row, col, event) => {
+    console.log(event.target.value)
     let copy = [...grid];
     copy[row][col] = +event.target.value;
     setCell(copy);
-    
   }
   
-  const boxes = [[0,0], [1,0], [2,0], [1,0], [1,1], [1,2], [2,0], [2,1], [2,2]]
-  console.log(boxes[5])
   return (
     <div className={styles.large_grid}>
-      {boxes.map(box => <SmallGrid boxRow={box[0]} boxCol={box[1]} />)}
+      {grid.map((row, rowIndex) => row.map((col, colIndex) => 
+          <Cell key={rowIndex + "" + colIndex} onClick={e => handleInteraction(rowIndex, colIndex, e)} />
+          )
+      )}
     </div>
   )
 }
 
 
 
-
-export function SmallGrid({ boxRow:row, boxCol:col }) {
+export function Cell() {
   return (
-    <div className={styles.box}>
-      <Cell row={row} col={col} />
-      <Cell row={row} col={col} />
-      <Cell row={row} col={col} />
-      <Cell row={row} col={col} />
-      <Cell row={row} col={col} />
-      <Cell row={row} col={col} />
-      <Cell row={row} col={col} />
-      <Cell row={row} col={col} />
-      <Cell row={row} col={col} />
-    </div>
-  )
-}
-
-export function Cell({ row:row, col:col}) {
-  const [value, setValue] = useState(null);
-  
-  function handleClick(val) {
-    setValue(val);
-  }
-  
-  return (
-    <div className={styles.cell} onClick={() => handleClick("row:" +row + " col:" + col)}>{value}</div>
+    <div className={styles.cell}>hi</div>
   )
 }
