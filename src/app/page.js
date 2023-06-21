@@ -53,15 +53,7 @@ export default function Home() {
       <div className={styles.main_flex}>
         <div className={styles.board_container}>
           <div className={styles.board}>
-            <div className={styles.large_grid}>
-              {(() => {
-                let boxes = []
-                for (var i = 0; i < 9; i++) {
-                  boxes.push(<SmallGrid key={i} />);
-                }
-                return boxes;
-              })()}
-            </div>
+            <LargeGrid />
           </div>
         </div>
         <div className={styles.input_container}>
@@ -82,6 +74,17 @@ export function NumPadButton({num: num}) {
     </div>
     )
 }
+
+export function LargeGrid() {
+  return (
+    <div className={styles.large_grid}>
+      
+    </div>
+  )
+}
+
+
+
 
 export function SmallGrid() {
   return (
