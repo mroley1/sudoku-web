@@ -111,8 +111,8 @@
   width: 90%;
   height: 90%;
   display: grid;
-  grid-template-rows: repeat(9, auto);
-  grid-template-columns: repeat(9, auto);
+  grid-template-rows: repeat(9, 9fr);
+  grid-template-columns: repeat(9, 9fr);
   row-gap: var(--small-gap-size);
   column-gap: var(--small-gap-size);
   background-color: black;
@@ -126,12 +126,23 @@
   align-items: center;
   justify-content: center;
   font-size: var(--cell-font-size);
+  cursor: pointer;
 }
 
+/* vertical box lines */
 .cell:nth-child(3n):not(.cell:nth-child(9n)) {
   margin-right: var(--large-gap-size);
 }
 
+.cell:nth-child(3n+1):not(.cell:nth-child(9n+1)) {
+  margin-left: var(--large-gap-size);
+}
+
+/* horizontal box lines */
 .cell:nth-child(n+19):not(.cell:nth-child(n+28)), .cell:nth-child(n+46):not(.cell:nth-child(n+55)) {
   margin-bottom: var(--large-gap-size);
+}
+
+.cell:nth-child(n+28):not(.cell:nth-child(n+37)), .cell:nth-child(n+55):not(.cell:nth-child(n+64)) {
+  margin-top: var(--large-gap-size);
 }

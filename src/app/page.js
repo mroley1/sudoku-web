@@ -76,27 +76,50 @@ export function LargeGrid() {
   
   const [grid, setCell] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => null)))
   
-  const handleInteraction = (row, col, event) => {
-    console.log(event.target.value)
+  function registerPress(row, col, event) {
+    console.log(row);
+    console.log(col);
+    console.log(event);
+    setCellByPos(row, col, "1");
+  }
+  
+  function setCellByPos(row, col, val) {
+    console.log("event.target.value")
     let copy = [...grid];
-    copy[row][col] = +event.target.value;
+    copy[row][col] = val;
     setCell(copy);
+  }
+  
+  function getCellByPos(row, col) {
+    return grid[row][col];
   }
   
   return (
     <div className={styles.large_grid}>
-      {grid.map((row, rowIndex) => row.map((col, colIndex) => 
-          <Cell key={rowIndex + "" + colIndex} onClick={e => handleInteraction(rowIndex, colIndex, e)} />
+      {
+      grid.map(
+        (row, rowIndex) => row.map(
+          (col, colIndex) =>  
+            <Cell
+              key={rowIndex + "" + colIndex}
+              clickFunction={registerPress}
+              row={rowIndex}
+              col={colIndex}
+              element={col}
+            />
           )
-      )}
+        )
+      }
     </div>
   )
 }
 
 
 
-export function Cell() {
+export function Cell({ clickFunction: click, element: value, row:row, col:col}) {
   return (
-    <div className={styles.cell}>hi</div>
+    <div className={styles.cell} onClick={e => click(row, col, e)}>
+      <span>{value}</span>
+    </div>
   )
 }
