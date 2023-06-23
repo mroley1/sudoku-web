@@ -31,15 +31,10 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
-.num_pad_key:hover {
-  background-color: rgb(99, 99, 99);
+  -webkit-tap-highlight-color: transparent;
 }
 .num_pad_key_selected {
   background-color: rgb(61, 117, 170);
-}
-.num_pad_key_selected:hover {
-  background-color: rgb(39, 89, 136);
 }
 .num_pad_key span {
   color: black;
@@ -111,6 +106,12 @@
   .num_pad_key span {
     font-size: 25pt;
   }
+  .num_pad_key:hover {
+    background-color: rgb(99, 99, 99);
+  }
+  .num_pad_key_selected:hover {
+    background-color: rgb(39, 89, 136);
+  }
 }
 
 .large_grid {
@@ -136,6 +137,7 @@
   justify-content: center;
   font-size: var(--cell-font-size);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 .cell span {
   pointer-events: none;
