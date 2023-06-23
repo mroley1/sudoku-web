@@ -1,41 +1,50 @@
 
 
 .main_flex {
-  background-color: yellow;
+  background-color: rgb(209, 209, 209);
   display: flex;
   width: 100%;
   height: 100%;
 }
 .board_container {
-  background-color: aqua;
   display: flex;
   justify-content: center;
 }
 .board {
-  background-color: blueviolet;
   align-self: center;
   aspect-ratio: 1;
 }
 .input_container {
-  background-color: greenyellow;
   display: flex;
   align-items: center;
 }
 .num_pad {
-  background-color: cadetblue;
   position: relative;
   display: inline-grid;
 }
 .num_pad_key {
-  background-color: blue;
+  background-color: rgb(146, 146, 146);
+  transition: background-color 0.2s linear;
   border-radius: 100%;
   margin: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+.num_pad_key:hover {
+  background-color: rgb(99, 99, 99);
+}
+.num_pad_key_selected {
+  background-color: rgb(61, 117, 170);
+}
+.num_pad_key_selected:hover {
+  background-color: rgb(39, 89, 136);
 }
 .num_pad_key span {
-  color: white;
+  color: black;
+  pointer-events: none;
+  user-select: none;
 }
 
 @media only screen and (orientation: landscape) {
@@ -119,7 +128,7 @@
 }
 
 .cell {
-  background-color: blueviolet;
+  background-color: rgb(209, 209, 209);
   width: calc(9fr - calc(var(--large-gap-size) / 9));
   height: calc(9fr - calc(var(--large-gap-size) / 9));
   display: flex;
@@ -127,6 +136,10 @@
   justify-content: center;
   font-size: var(--cell-font-size);
   cursor: pointer;
+}
+.cell span {
+  pointer-events: none;
+  user-select: none;
 }
 
 /* vertical box lines */

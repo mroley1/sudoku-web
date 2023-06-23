@@ -4,21 +4,19 @@ import Image from 'next/image'
 import styles from './page.module.css'
 import { useState } from 'react';
 
-const NUMPADTOPROW = [
+const NUMPADVALUES = [
   {name: "1", value: 1},
   {name: "2", value: 2},
   {name: "3", value: 3},
   {name: "4", value: 4},
   {name: "5", value: 5},
-]
-
-const NUMPADBOTTOMROW = [
   {name: "6", value: 6},
   {name: "7", value: 7},
   {name: "8", value: 8},
   {name: "9", value: 9},
   {name: "X", value: 0},
 ]
+
 
 function * gridSchemeGen() {
   var key = 0;
@@ -30,33 +28,45 @@ function * gridSchemeGen() {
 }
 
 export default function Home() {
-  let gridPositionGen = gridSchemeGen();
   
+  const [keypadState, setKeypadState] = useState(null)
   
-  const [board, setBoard] = useState(Array.from({length: 9}, () => Array.from({length: 9}, () => (<Cell />))));
-  
-  const handelChange = (row, col, event) => {
-    let copy = [...board];
-    copy[row][col] = +event.target.value;
-    setBoard(copy);
+  function changeKeypadState(state) {
+    let val = null
+    if (state != null) {
+      val = parseInt(state % 10)
+    }
+    setKeypadState(val);
   }
   
+  function clearKeypad() {
+    let keys = document.getElementById("keypad").children;
+    for (let i = 0; i < keys.length; i++) {
+      keys[i].classList.remove(styles.num_pad_key_selected);
+    }
+  }
   
-  
-  
+  function handleKeypadPress(value, event) {
+    clearKeypad()
+    if (keypadState == value) {
+      changeKeypadState(null);
+    } else {
+      changeKeypadState(value);
+      event.target.classList.add(styles.num_pad_key_selected);
+    }
+  }
   
   return (
     <main>
       <div className={styles.main_flex}>
         <div className={styles.board_container}>
           <div className={styles.board}>
-            <LargeGrid />
+            <LargeGrid keypadState={keypadState} />
           </div>
         </div>
         <div className={styles.input_container}>
-          <div className={styles.num_pad}>
-            {NUMPADTOPROW.map(num => <NumPadButton num={num} />)}
-            {NUMPADBOTTOMROW.map(num => <NumPadButton num={num} />)}
+          <div id='keypad' className={styles.num_pad}>
+            {NUMPADVALUES.map(num => <NumPadButton key={num.name} hook={handleKeypadPress} num={num} />)}
           </div>
         </div>
       </div>
@@ -64,27 +74,25 @@ export default function Home() {
   )
 }
 
-export function NumPadButton({num: num}) {
+export function NumPadButton({num: num, hook: click}) {
   return (
-    <div key={num.name} className={styles.num_pad_key}>
+    <div className={styles.num_pad_key} onClick={e => {click(num.value, e)}}>
       <span>{num.name}</span>
     </div>
     )
 }
 
-export function LargeGrid() {
+export function LargeGrid({ keypadState: keypadState}) {
   
-  const [grid, setCell] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => null)))
+  const [grid, setCell] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => 0)))
   
   function registerPress(row, col, event) {
-    console.log(row);
-    console.log(col);
-    console.log(event);
-    setCellByPos(row, col, "1");
+    if (keypadState != null) {
+      setCellByPos(row, col, keypadState);
+    }
   }
   
   function setCellByPos(row, col, val) {
-    console.log("event.target.value")
     let copy = [...grid];
     copy[row][col] = val;
     setCell(copy);
@@ -102,7 +110,7 @@ export function LargeGrid() {
           (col, colIndex) =>  
             <Cell
               key={rowIndex + "" + colIndex}
-              clickFunction={registerPress}
+              hook={registerPress}
               row={rowIndex}
               col={colIndex}
               element={col}
@@ -115,11 +123,15 @@ export function LargeGrid() {
 }
 
 
+function displayValue(value) {
+  const key = {0:"", 1:"1", 2:"2", 3:"3", 4:"4", 5:"5", 6:"6", 7:"7", 8:"8", 9:"9"};
+  return key[value];
+}
 
-export function Cell({ clickFunction: click, element: value, row:row, col:col}) {
+export function Cell({ hook: click, element: value, row:row, col:col}) {
   return (
     <div className={styles.cell} onClick={e => click(row, col, e)}>
-      <span>{value}</span>
+      <span>{displayValue(value)}</span>
     </div>
   )
 }
