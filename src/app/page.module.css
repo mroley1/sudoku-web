@@ -139,6 +139,17 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
+
+.cell_highlight {
+  width: 90%;
+  height: 90%;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.35s ease;
+}
+
 .cell span {
   pointer-events: none;
   user-select: none;

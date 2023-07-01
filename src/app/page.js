@@ -18,6 +18,34 @@ const NUMPADVALUES = [
 ]
 
 
+export class CellData {
+  #value = 0;
+  #marked = [];
+  constructor() {
+    this.#value = 0;
+    this.#marked = [];
+  }
+  getValue() {
+    return this.#value;
+  }
+  getMarked() {
+    return this.#marked;
+  }
+  setValue(value) {
+    this.#value = value;
+    this.#marked = [];
+  }
+  addMarked(mark) {
+    this.#value = 0;
+    this.#marked.push(mark);
+  }
+  removeMarked(mark) {
+    this.#value = 0;
+    this.#marked.pop(mark);
+  }
+}
+
+
 function * gridSchemeGen() {
   var key = 0;
   for (var row = 0; row <3; row++) {
@@ -84,7 +112,7 @@ export function NumPadButton({num: num, hook: click}) {
 
 export function LargeGrid({ keypadState: keypadState}) {
   
-  const [grid, setCell] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => 0)))
+  const [grid, setCell] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => new CellData())))
   
   function registerPress(row, col, event) {
     if (keypadState != null) {
@@ -94,12 +122,12 @@ export function LargeGrid({ keypadState: keypadState}) {
   
   function setCellByPos(row, col, val) {
     let copy = [...grid];
-    copy[row][col] = val;
+    copy[row][col].setValue(val);
     setCell(copy);
   }
   
   function getCellByPos(row, col) {
-    return grid[row][col];
+    return grid[row][col].getValue();
   }
   
   return (
@@ -114,6 +142,7 @@ export function LargeGrid({ keypadState: keypadState}) {
               row={rowIndex}
               col={colIndex}
               element={col}
+              keypadState={keypadState}
             />
           )
         )
@@ -128,10 +157,20 @@ function displayValue(value) {
   return key[value];
 }
 
-export function Cell({ hook: click, element: value, row:row, col:col}) {
+export function Cell({ hook: click, element: value, row:row, col:col, keypadState:keypadState}) {
+  let style = {transitionDelay: Math.random()/4+"s"}
+  if (keypadState == value.getValue() && keypadState != 0) {
+    style = {
+      backgroundColor: "green",
+      transitionDelay: Math.random()/4+"s"
+    }
+  }
+  
   return (
     <div className={styles.cell} onClick={e => click(row, col, e)}>
-      <span>{displayValue(value)}</span>
+      <div className={styles.cell_highlight} style={style}>
+        <span>{displayValue(value.getValue())}</span>
+      </div>
     </div>
   )
 }
