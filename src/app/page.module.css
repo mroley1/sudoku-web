@@ -150,6 +150,10 @@
   transition: background-color 0.35s ease;
 }
 
+.cell_perm {
+  background-color: gray;
+}
+
 .cell span {
   pointer-events: none;
   user-select: none;

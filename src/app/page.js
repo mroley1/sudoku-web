@@ -19,11 +19,19 @@ const NUMPADVALUES = [
 
 
 export class CellData {
-  #value = 0;
-  #marked = [];
-  constructor() {
+  #value;
+  #marked;
+  #perm;
+  constructor(perm, debug=false) {
     this.#value = 0;
     this.#marked = [];
+    this.#perm = perm;
+    if (debug) {
+      if (Math.floor(Math.random() * 5) == 0) {
+        this.#value = Math.floor(Math.random() * 8) + 1;
+        this.#perm = true;
+      }
+    }
   }
   getValue() {
     return this.#value;
@@ -31,21 +39,30 @@ export class CellData {
   getMarked() {
     return this.#marked;
   }
+  getPerm() {
+    return this.#perm;
+  }
   setValue(value) {
-    this.#value = value;
-    this.#marked = [];
+    if (!this.#perm) {
+      this.#value = value;
+      this.#marked = [];
+    }
   }
   addMarked(mark) {
-    this.#value = 0;
-    this.#marked.push(mark);
+    if (!this.#perm) {
+      this.#value = 0;
+      this.#marked.push(mark);
+    }
   }
   removeMarked(mark) {
-    this.#value = 0;
-    this.#marked.pop(mark);
+    if (!this.#perm) {
+      this.#value = 0;
+      this.#marked.pop(mark);
+    }
   }
 }
 
-
+// ! not used
 function * gridSchemeGen() {
   var key = 0;
   for (var row = 0; row <3; row++) {
@@ -112,7 +129,7 @@ export function NumPadButton({num: num, hook: click}) {
 
 export function LargeGrid({ keypadState: keypadState}) {
   
-  const [grid, setCell] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => new CellData())))
+  const [grid, setCell] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => new CellData(false, true))))
   
   function registerPress(row, col, event) {
     if (keypadState != null) {
@@ -157,19 +174,24 @@ function displayValue(value) {
   return key[value];
 }
 
-export function Cell({ hook: click, element: value, row:row, col:col, keypadState:keypadState}) {
-  let style = {transitionDelay: Math.random()/4+"s"}
-  if (keypadState == value.getValue() && keypadState != 0) {
-    style = {
+export function Cell({ hook: click, element: cellData, row:row, col:col, keypadState:keypadState}) {
+  let highlightStyle = {transitionDelay: Math.random()/4+"s"}
+  if (keypadState == cellData.getValue() && keypadState != 0) {
+    highlightStyle = {
       backgroundColor: "green",
       transitionDelay: Math.random()/4+"s"
     }
   }
   
+  let highlightClasses = styles.cell_highlight;
+  if (cellData.getPerm()) {
+    highlightClasses += " " + styles.cell_perm;
+  }
+  
   return (
     <div className={styles.cell} onClick={e => click(row, col, e)}>
-      <div className={styles.cell_highlight} style={style}>
-        <span>{displayValue(value.getValue())}</span>
+      <div className={highlightClasses} style={highlightStyle}>
+        <span>{displayValue(cellData.getValue())}</span>
       </div>
     </div>
   )
